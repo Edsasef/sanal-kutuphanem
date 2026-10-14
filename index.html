@@ -7,237 +7,99 @@
     <!-- Chart.js Kütüphanesi -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Genel Tasarım Ayarları */
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #f4f7f6; 
-            margin: 0; 
-            padding: 0; 
-            color: #333;
-        }
+        /* GENEL AYARLAR */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; color: #333; }
         * { box-sizing: border-box; }
 
-        /* Giriş Ekranı */
-        #login-container { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            padding: 20px;
-        }
-        .login-box { 
-            background: white; 
-            padding: 40px; 
-            border-radius: 12px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
-            text-align: center; 
-            width: 100%;
-            max-width: 350px;
-        }
+        /* GİRİŞ EKRANI */
+        #login-container { display: flex; justify-content: center; align-items: center; height: 100vh; padding: 20px; }
+        .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 350px; }
         .login-box h2 { margin-top: 0; color: #2c3e50; }
-        .login-box input { 
-            width: 100%; 
-            margin: 10px 0; 
-            padding: 12px; 
-            border: 1px solid #ddd; 
-            border-radius: 6px; 
-            font-size: 14px;
-        }
-        .login-box button { 
-            width: 100%; 
-            padding: 12px; 
-            margin-top: 10px;
-            background: #3498db; 
-            color: white; 
-            border: none; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-size: 16px;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
+        .login-box input { width: 100%; margin: 10px 0; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+        .login-box button { width: 100%; padding: 12px; margin-top: 10px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
         .login-box button:hover { background: #2980b9; }
         #error-msg { color: #e74c3c; display: none; font-size: 0.9em; margin-top: 10px; }
 
-        /* Ana Kütüphane Ekranı */
-        #app-container { 
-            display: none; 
-            max-width: 1000px; 
-            margin: 40px auto; 
-            padding: 20px; 
-        }
+        /* ANA UYGULAMA */
+        #app-container { display: none; max-width: 1100px; margin: 40px auto; padding: 20px; }
         
-        /* Header Kısmı */
-        .header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
+        /* HEADER VE MENÜ */
+        .header { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
         .header h2 { margin: 0; color: #2c3e50; }
-        .header-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .header-buttons button {
-            padding: 10px 18px; 
-            color: white; 
-            border: none; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-        .add-btn { background: #2ecc71; }
-        .add-btn:hover { background: #27ae60; }
-        .stats-btn { background: #9b59b6; }
-        .stats-btn:hover { background: #8e44ad; }
-        .logout-btn { background: #e74c3c; }
-        .logout-btn:hover { background: #c0392b; }
+        .header-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .header-buttons button { padding: 10px 18px; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .add-btn { background: #2ecc71; } .add-btn:hover { background: #27ae60; }
+        .stats-btn { background: #9b59b6; } .stats-btn:hover { background: #8e44ad; }
+        .logout-btn { background: #e74c3c; } .logout-btn:hover { background: #c0392b; }
+        
+        /* NAVİGASYON (SEKMELER) */
+        .nav-tabs { display: flex; gap: 20px; }
+        .nav-tab { font-size: 16px; font-weight: bold; color: #7f8c8d; cursor: pointer; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: 0.3s; }
+        .nav-tab:hover { color: #3498db; }
+        .nav-tab.active { color: #3498db; border-bottom: 3px solid #3498db; }
 
-        /* Modallar (Açılır Pencereler) Tasarımı */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 20px;
-            animation: fadeIn 0.2s ease-in-out;
-            overflow-y: auto;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .modal {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            position: relative;
-            text-align: center;
-            margin: auto;
-        }
-        .modal.large {
-            max-width: 800px;
-        }
-        .modal h3 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;}
-        .close-modal {
-            position: absolute;
-            top: 15px; right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-        }
-        .close-modal:hover { color: #333; }
-        
-        .modal input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-        
-        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
-        .modal-buttons button {
-            flex: 1; padding: 12px; border: none; border-radius: 6px;
-            font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s;
-        }
-        .modal-save-btn { background: #3498db; color: white; }
-        .modal-save-btn:hover { background: #2980b9; }
-        .modal-cancel-btn { background: #ecf0f1; color: #7f8c8d; }
-        .modal-cancel-btn:hover { background: #bdc3c7; color: #2c3e50; }
-        .modal-delete-btn { background: #e74c3c; color: white; }
-        .modal-delete-btn:hover { background: #c0392b; }
+        /* ARAMA ÇUBUĞU */
+        .search-container { margin-bottom: 25px; }
+        .search-container input { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ddd; font-size: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
 
-        /* İstatistik Paneli Tasarımı */
-        .stats-summary {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        .stat-box {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            flex: 1;
-            min-width: 150px;
-            border: 1px solid #eee;
-        }
-        .stat-box h4 { margin: 0 0 10px 0; color: #7f8c8d; font-size: 0.9em; }
-        .stat-box span { font-size: 1.8em; font-weight: bold; color: #2c3e50; }
-        
-        .charts-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-        .chart-wrapper {
-            flex: 1;
-            min-width: 300px;
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-        }
+        /* SEKMELERİN İÇERİK ALANLARI */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s; }
 
-        /* Kitap Listesi ve Kartlar */
-        .book-list { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
-            gap: 20px; 
-        }
-        .book-card { 
-            padding: 20px; 
-            border: 1px solid #eee; 
-            border-radius: 12px; 
-            background: white; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+        /* KİTAP KARTLARI (KİTAPLARIM KISMI) */
+        .book-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        .book-card { padding: 20px; border: 1px solid #eee; border-radius: 12px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: transform 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
         .book-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.08); }
         .book-card h3 { margin: 0 0 5px; font-size: 1.2em; color: #34495e; }
-        .book-card p { margin: 0; color: #7f8c8d; font-size: 0.95em; margin-bottom: 15px; }
+        .book-card p.author { margin: 0; color: #7f8c8d; font-size: 0.95em; margin-bottom: 10px; }
         
-        /* Progress Bar */
+        /* PUANLAMA (YILDIZLAR) */
+        .rating { color: #f1c40f; font-size: 1.2em; margin-bottom: 15px; cursor: pointer; user-select: none; }
+        .star { transition: 0.2s; }
+        .star:hover { transform: scale(1.2); }
+
+        /* PROGRESS BAR */
         .progress-info { font-size: 0.85em; color: #555; margin-bottom: 5px; display: flex; justify-content: space-between; }
         .progress-bar-bg { width: 100%; height: 8px; background: #ecf0f1; border-radius: 4px; margin-bottom: 15px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; background: #2ecc71; border-radius: 4px; transition: width 0.3s ease; }
+        .progress-bar-fill { height: 100%; background: #2ecc71; border-radius: 4px; transition: width 0.3s; }
 
-        /* Kart İçi Aksiyon Butonları */
+        /* KART BUTONLARI */
         .card-actions { display: flex; gap: 10px; margin-top: 10px; }
-        .edit-btn, .delete-btn {
-            flex: 1; padding: 8px; border-radius: 6px; cursor: pointer;
-            font-size: 0.9em; font-weight: bold; transition: all 0.3s; background: #fff;
-        }
-        .edit-btn { border: 1px solid #f39c12; color: #f39c12; }
-        .edit-btn:hover { background: #f39c12; color: #fff; }
-        .delete-btn { border: 1px solid #e74c3c; color: #e74c3c; }
-        .delete-btn:hover { background: #e74c3c; color: #fff; }
+        .card-actions button { flex: 1; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 0.9em; font-weight: bold; background: #fff; transition: 0.3s; }
+        .edit-btn { border: 1px solid #f39c12; color: #f39c12; } .edit-btn:hover { background: #f39c12; color: #fff; }
+        .delete-btn { border: 1px solid #e74c3c; color: #e74c3c; } .delete-btn:hover { background: #e74c3c; color: #fff; }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            .header { flex-direction: column; text-align: center; }
-            .header-buttons { width: 100%; justify-content: center; margin-top: 10px;}
-            .book-list { grid-template-columns: 1fr; }
-        }
+        /* KOLEKSİYONLAR (YAZARLAR) ALANI */
+        .collections-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .collection-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-top: 4px solid #3498db; }
+        .collection-card h3 { margin: 0 0 15px; color: #2c3e50; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .collection-book-item { padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 0.95em; color: #555; display: flex; justify-content: space-between; }
+        .collection-book-item:last-child { border-bottom: none; }
+
+        /* MODALLAR (PENCERELER) */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000; padding: 20px; overflow-y: auto; }
+        .modal { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; margin: auto; }
+        .modal.large { max-width: 800px; }
+        .modal h3 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;}
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #999; }
+        .modal input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-buttons button { flex: 1; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .modal-save-btn { background: #3498db; color: white; }
+        .modal-cancel-btn { background: #ecf0f1; color: #7f8c8d; }
+        .modal-delete-btn { background: #e74c3c; color: white; }
+
+        /* İSTATİSTİK PANELLERİ */
+        .stats-summary { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; margin-bottom: 30px; }
+        .stat-box { background: #f8f9fa; border-radius: 8px; padding: 15px; flex: 1; min-width: 150px; border: 1px solid #eee; text-align: center; }
+        .stat-box h4 { margin: 0 0 10px 0; color: #7f8c8d; font-size: 0.9em; }
+        .stat-box span { font-size: 1.8em; font-weight: bold; color: #2c3e50; }
+        .charts-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .chart-wrapper { flex: 1; min-width: 300px; background: white; padding: 10px; border-radius: 8px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @media (max-width: 600px) { .header-top { flex-direction: column; text-align: center; } .header-buttons { width: 100%; justify-content: center;} }
     </style>
 </head>
 <body>
@@ -247,8 +109,8 @@
         <div class="login-box">
             <h2>📚 Sanal Kütüphane</h2>
             <p style="color: #7f8c8d; font-size: 0.9em;">Lütfen giriş yapın</p>
-            <input type="text" id="username" placeholder="Kullanıcı Adı">
-            <input type="password" id="password" placeholder="Şifre">
+            <input type="text" id="username" placeholder="Kullanıcı Adı (admin)">
+            <input type="password" id="password" placeholder="Şifre (admin)">
             <button onclick="login()">Giriş Yap</button>
             <p id="error-msg">Hatalı kullanıcı adı veya şifre!</p>
         </div>
@@ -256,20 +118,47 @@
 
     <!-- ANA UYGULAMA EKRANI -->
     <div id="app-container">
+        <!-- ÜST PANEL VE MENÜ -->
         <div class="header">
-            <h2>📚 Sanal Kütüphanem</h2>
-            <div class="header-buttons">
-                <button class="stats-btn" onclick="openStatsModal()">📊 İstatistikler</button>
-                <button class="add-btn" onclick="openAddModal()">+ Yeni Kitap</button>
-                <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+            <div class="header-top">
+                <h2>📚 Sanal Kütüphanem</h2>
+                <div class="header-buttons">
+                    <button class="stats-btn" onclick="openStatsModal()">📊 İstatistikler</button>
+                    <button class="add-btn" onclick="openAddModal()">+ Yeni Kitap</button>
+                    <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+                </div>
+            </div>
+            <!-- SEKMELER -->
+            <div class="nav-tabs">
+                <div class="nav-tab active" id="tab-btn-books" onclick="switchTab('books')">Kitaplarım</div>
+                <div class="nav-tab" id="tab-btn-collections" onclick="switchTab('collections')">Koleksiyonlar</div>
             </div>
         </div>
 
-        <div class="book-list" id="book-list">
-            <!-- Kitaplar buraya yüklenecek -->
+        <!-- 1. SEKME: KİTAPLARIM -->
+        <div id="tab-books" class="tab-content active">
+            <!-- Arama Motoru -->
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="🔍 Kitap adı veya yazar arayın..." onkeyup="searchBooks()">
+            </div>
+            <!-- Kitap Listesi -->
+            <div class="book-list" id="book-list"></div>
+        </div>
+
+        <!-- 2. SEKME: KOLEKSİYONLAR -->
+        <div id="tab-collections" class="tab-content">
+            <!-- Koleksiyon Arama Motoru -->
+            <div class="search-container">
+                <input type="text" id="search-collections-input" placeholder="🔍 Yazar adı veya koleksiyon içindeki bir kitabı arayın..." onkeyup="searchCollections()">
+            </div>
+            <div class="collections-grid" id="collections-list">
+                <!-- Yazara göre gruplanmış kitaplar buraya gelecek -->
+            </div>
         </div>
     </div>
 
+    <!-- MODALLAR (Açılır Pencereler) -->
+    
     <!-- YENİ KİTAP EKLEME MODALI -->
     <div class="modal-overlay" id="add-modal">
         <div class="modal">
@@ -320,45 +209,25 @@
         <div class="modal large">
             <span class="close-modal" onclick="closeModal('stats-modal')">&times;</span>
             <h3>📊 Okuma İstatistiklerim</h3>
-            
-            <!-- Genel Özet -->
             <div class="stats-summary">
-                <div class="stat-box">
-                    <h4>Kütüphane Kitap</h4>
-                    <span id="stat-total-books">0</span>
-                </div>
-                <div class="stat-box">
-                    <h4>Biten Kitap</h4>
-                    <span id="stat-completed-books" style="color: #2ecc71;">0</span>
-                </div>
-                <div class="stat-box">
-                    <h4>Toplam Sayfa</h4>
-                    <span id="stat-total-pages">0</span>
-                </div>
-                <div class="stat-box">
-                    <h4>Okunan Sayfa</h4>
-                    <span id="stat-read-pages" style="color: #3498db;">0</span>
-                </div>
+                <div class="stat-box"><h4>Kütüphane Kitap</h4><span id="stat-total-books">0</span></div>
+                <div class="stat-box"><h4>Biten Kitap</h4><span id="stat-completed-books" style="color: #2ecc71;">0</span></div>
+                <div class="stat-box"><h4>Toplam Sayfa</h4><span id="stat-total-pages">0</span></div>
+                <div class="stat-box"><h4>Okunan Sayfa</h4><span id="stat-read-pages" style="color: #3498db;">0</span></div>
             </div>
-
-            <!-- Grafikler -->
             <div class="charts-container">
-                <div class="chart-wrapper">
-                    <canvas id="pieChart"></canvas>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="barChart"></canvas>
-                </div>
+                <div class="chart-wrapper"><canvas id="pieChart"></canvas></div>
+                <div class="chart-wrapper"><canvas id="barChart"></canvas></div>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- JAVASCRIPT KODLARI -->
     <script>
         let pieChartInstance = null;
         let barChartInstance = null;
 
-        // Sayfa Yüklendiğinde
+        // Sayfa Başlangıcı
         window.onload = () => {
             if (sessionStorage.getItem('isLoggedIn') === 'true') {
                 showApp();
@@ -375,74 +244,70 @@
                 document.getElementById('error-msg').style.display = 'none';
                 showApp();
                 loadBooks();
-            } else {
-                document.getElementById('error-msg').style.display = 'block';
-            }
+            } else { document.getElementById('error-msg').style.display = 'block'; }
         }
-
         function logout() {
             sessionStorage.removeItem('isLoggedIn');
             document.getElementById('login-container').style.display = 'flex';
             document.getElementById('app-container').style.display = 'none';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
         }
-
         function showApp() {
             document.getElementById('login-container').style.display = 'none';
             document.getElementById('app-container').style.display = 'block';
         }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
-        // MODAL KAPATMA
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
+        // SEKME (TAB) DEĞİŞTİRME
+        function switchTab(tabName) {
+            document.getElementById('tab-btn-books').classList.remove('active');
+            document.getElementById('tab-btn-collections').classList.remove('active');
+            document.getElementById('tab-books').classList.remove('active');
+            document.getElementById('tab-collections').classList.remove('active');
+
+            if(tabName === 'books') {
+                document.getElementById('tab-btn-books').classList.add('active');
+                document.getElementById('tab-books').classList.add('active');
+                loadBooks();
+            } else {
+                document.getElementById('tab-btn-collections').classList.add('active');
+                document.getElementById('tab-collections').classList.add('active');
+                loadCollections();
+            }
         }
 
-        // --- KİTAP EKLEME İŞLEMLERİ ---
+        // --- KİTAP EKLEME ---
         function openAddModal() {
             document.getElementById('add-modal').style.display = 'flex';
-            document.getElementById('m-title').value = '';
-            document.getElementById('m-author').value = '';
-            document.getElementById('m-total-pages').value = '';
-            document.getElementById('m-read-pages').value = '';
+            document.getElementById('m-title').value = ''; document.getElementById('m-author').value = '';
+            document.getElementById('m-total-pages').value = ''; document.getElementById('m-read-pages').value = '';
         }
 
         function addBook() {
-            const title = document.getElementById('m-title').value;
-            const author = document.getElementById('m-author').value;
+            const title = document.getElementById('m-title').value.trim();
+            const author = document.getElementById('m-author').value.trim();
             let totalPages = parseInt(document.getElementById('m-total-pages').value);
             let readPages = parseInt(document.getElementById('m-read-pages').value);
 
-            if (!title || !author || isNaN(totalPages) || isNaN(readPages)) {
-                alert('Lütfen tüm alanları doldurunuz!');
-                return;
-            }
-            if (readPages > totalPages) {
-                alert('Okunan sayfa sayısı, toplam sayfa sayısından büyük olamaz!');
-                return;
-            }
-            if (readPages < 0 || totalPages <= 0) {
-                alert('Geçerli bir sayfa sayısı giriniz!');
-                return;
-            }
+            if (!title || !author || isNaN(totalPages) || isNaN(readPages)) return alert('Tüm alanları doldurunuz!');
+            if (readPages > totalPages) return alert('Okunan sayfa, toplam sayfadan büyük olamaz!');
+            if (readPages < 0 || totalPages <= 0) return alert('Geçerli sayfa sayısı giriniz!');
 
             const book = { 
-                id: Date.now(), title: title, author: author, totalPages: totalPages, readPages: readPages
+                id: Date.now(), title: title, author: author, 
+                totalPages: totalPages, readPages: readPages, rating: 0 // Varsayılan puan 0
             };
             
             let books = JSON.parse(localStorage.getItem('savedBooks')) || [];
             books.push(book);
             localStorage.setItem('savedBooks', JSON.stringify(books));
-            
-            closeModal('add-modal');
-            loadBooks();
+            closeModal('add-modal'); loadBooks();
+            if(document.getElementById('tab-collections').classList.contains('active')) loadCollections();
         }
 
-        // --- KİTAP DÜZENLEME İŞLEMLERİ ---
+        // --- KİTAP DÜZENLEME & SİLME ---
         function openEditModal(id) {
             let books = JSON.parse(localStorage.getItem('savedBooks')) || [];
             const book = books.find(b => b.id === id);
-            
             if(book) {
                 document.getElementById('edit-book-id').value = book.id;
                 document.getElementById('edit-book-title').innerText = `"${book.title}"`;
@@ -455,28 +320,18 @@
         function saveEdit() {
             const id = parseInt(document.getElementById('edit-book-id').value);
             const newReadPages = parseInt(document.getElementById('edit-read-pages').value);
-            
-            if (isNaN(newReadPages) || newReadPages < 0) {
-                alert('Lütfen geçerli bir sayfa sayısı girin!');
-                return;
-            }
+            if (isNaN(newReadPages) || newReadPages < 0) return alert('Geçerli sayfa girin!');
 
             let books = JSON.parse(localStorage.getItem('savedBooks')) || [];
-            const bookIndex = books.findIndex(b => b.id === id);
-            
-            if (bookIndex !== -1) {
-                if (newReadPages > books[bookIndex].totalPages) {
-                    alert('Okunan sayfa sayısı, toplam sayfa sayısını (' + books[bookIndex].totalPages + ') geçemez!');
-                    return;
-                }
-                books[bookIndex].readPages = newReadPages;
+            const index = books.findIndex(b => b.id === id);
+            if (index !== -1) {
+                if (newReadPages > books[index].totalPages) return alert(`Sayfa sayısı ${books[index].totalPages}'i geçemez!`);
+                books[index].readPages = newReadPages;
                 localStorage.setItem('savedBooks', JSON.stringify(books));
-                closeModal('edit-modal');
-                loadBooks();
+                closeModal('edit-modal'); loadBooks();
             }
         }
 
-        // --- KİTAP SİLME İŞLEMLERİ ---
         function openDeleteModal(id) {
             document.getElementById('delete-book-id').value = id;
             document.getElementById('delete-modal').style.display = 'flex';
@@ -485,125 +340,79 @@
         function confirmDelete() {
             const id = parseInt(document.getElementById('delete-book-id').value);
             let books = JSON.parse(localStorage.getItem('savedBooks')) || [];
-            books = books.filter(book => book.id !== id);
+            books = books.filter(b => b.id !== id);
             localStorage.setItem('savedBooks', JSON.stringify(books));
-            closeModal('delete-modal');
-            loadBooks(); 
+            closeModal('delete-modal'); loadBooks();
+            if(document.getElementById('tab-collections').classList.contains('active')) loadCollections();
         }
 
-        // --- İSTATİSTİK İŞLEMLERİ ---
-        function openStatsModal() {
-            document.getElementById('stats-modal').style.display = 'flex';
-            renderStats();
-        }
-
-        function renderStats() {
+        // --- YILDIZLI PUANLAMA SİSTEMİ ---
+        function setRating(bookId, starValue) {
             let books = JSON.parse(localStorage.getItem('savedBooks')) || [];
-            
-            let totalBooks = books.length;
-            let completedBooks = 0;
-            let totalPages = 0;
-            let totalReadPages = 0;
-            
-            let bookTitles = [];
-            let bookReadPages = [];
+            const index = books.findIndex(b => b.id === bookId);
+            if (index !== -1) {
+                books[index].rating = starValue;
+                localStorage.setItem('savedBooks', JSON.stringify(books));
+                loadBooks(); // Ekranı yenile
+            }
+        }
 
-            books.forEach(b => {
-                totalPages += b.totalPages;
-                totalReadPages += b.readPages;
-                
-                // Kitap bittiyse (okunan sayfa >= toplam sayfa)
-                if (b.readPages >= b.totalPages) {
-                    completedBooks++;
+        function generateStarsHTML(bookId, rating) {
+            let html = '<div class="rating">';
+            for(let i = 1; i <= 5; i++) {
+                if(i <= rating) {
+                    html += `<span class="star" onclick="setRating(${bookId}, ${i})">★</span>`;
+                } else {
+                    html += `<span class="star" onclick="setRating(${bookId}, ${i})">☆</span>`;
                 }
+            }
+            html += '</div>';
+            return html;
+        }
 
-                // Bar grafik için isimleri kısalt (çok uzun isimler grafiği bozmasın)
-                let shortTitle = b.title.length > 15 ? b.title.substring(0, 15) + "..." : b.title;
-                bookTitles.push(shortTitle);
-                bookReadPages.push(b.readPages);
-            });
+        // --- ARAMA MOTORLARI ---
+        function searchBooks() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            loadBooks(query);
+        }
 
-            let readingBooks = totalBooks - completedBooks;
-
-            // Özet Bilgileri Ekrana Yazdır
-            document.getElementById('stat-total-books').innerText = totalBooks;
-            document.getElementById('stat-completed-books').innerText = completedBooks;
-            document.getElementById('stat-total-pages').innerText = totalPages;
-            document.getElementById('stat-read-pages').innerText = totalReadPages;
-
-            // 1. Pasta Grafiği (Kitap Durumu)
-            const ctxPie = document.getElementById('pieChart').getContext('2d');
-            if (pieChartInstance) pieChartInstance.destroy(); // Eski grafiği temizle
-            
-            pieChartInstance = new Chart(ctxPie, {
-                type: 'pie',
-                data: {
-                    labels: ['Biten Kitaplar', 'Okunmaya Devam Edenler'],
-                    datasets: [{
-                        data: [completedBooks, readingBooks],
-                        backgroundColor: ['#2ecc71', '#f1c40f'],
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: { display: true, text: 'Kitap Okuma Durumu' }
-                    }
-                }
-            });
-
-            // 2. Bar Grafiği (Kitaplara Göre Okunan Sayfalar)
-            const ctxBar = document.getElementById('barChart').getContext('2d');
-            if (barChartInstance) barChartInstance.destroy(); // Eski grafiği temizle
-
-            barChartInstance = new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: bookTitles,
-                    datasets: [{
-                        label: 'Okunan Sayfa',
-                        data: bookReadPages,
-                        backgroundColor: '#3498db',
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: { y: { beginAtZero: true } },
-                    plugins: {
-                        title: { display: true, text: 'Kitap Başında Okunan Sayfalar' }
-                    }
-                }
-            });
+        function searchCollections() {
+            const query = document.getElementById('search-collections-input').value.toLowerCase();
+            loadCollections(query);
         }
 
         // --- KİTAPLARI LİSTELEME ---
-        function loadBooks() {
+        function loadBooks(searchQuery = "") {
             const bookList = document.getElementById('book-list');
             bookList.innerHTML = ''; 
+            let books = JSON.parse(localStorage.getItem('savedBooks')) || [];
             
-            const books = JSON.parse(localStorage.getItem('savedBooks')) || [];
-            
+            if(searchQuery !== "") {
+                books = books.filter(b => b.title.toLowerCase().includes(searchQuery) || b.author.toLowerCase().includes(searchQuery));
+            }
+
             if(books.length === 0) {
-                bookList.innerHTML = '<p style="color: #999; text-align: center; width: 100%;">Henüz kitap eklemediniz. "+ Yeni Kitap" butonuna tıklayarak başlayabilirsiniz.</p>';
+                bookList.innerHTML = '<p style="color: #999; text-align: center; width: 100%;">Gösterilecek kitap bulunamadı.</p>';
                 return;
             }
 
             books.forEach(book => {
                 let percent = (book.readPages / book.totalPages) * 100;
                 percent = percent > 100 ? 100 : percent; 
+                let ratingVal = book.rating || 0;
 
                 const card = document.createElement('div');
                 card.className = 'book-card';
                 card.innerHTML = `
                     <div>
                         <h3>${book.title}</h3>
-                        <p>✍️ ${book.author}</p>
+                        <p class="author">✍️ ${book.author}</p>
+                        
+                        ${generateStarsHTML(book.id, ratingVal)}
                         
                         <div class="progress-info">
                             <span>Okuma Durumu</span>
-                            <b>${book.readPages} / ${book.totalPages} Sayfa</b>
+                            <b>${book.readPages} / ${book.totalPages}</b>
                         </div>
                         <div class="progress-bar-bg">
                             <div class="progress-bar-fill" style="width: ${percent}%;"></div>
@@ -615,6 +424,106 @@
                     </div>
                 `;
                 bookList.appendChild(card);
+            });
+        }
+
+        // --- KOLEKSİYONLARI (YAZARLARI) LİSTELEME ---
+        function loadCollections(searchQuery = "") {
+            const colList = document.getElementById('collections-list');
+            colList.innerHTML = '';
+            let books = JSON.parse(localStorage.getItem('savedBooks')) || [];
+
+            if(books.length === 0) {
+                colList.innerHTML = '<p style="color: #999;">Henüz koleksiyon oluşturulacak kitap yok.</p>';
+                return;
+            }
+
+            let collections = {};
+            books.forEach(b => {
+                if(!collections[b.author]) collections[b.author] = [];
+                collections[b.author].push(b);
+            });
+
+            let foundAny = false;
+
+            for(let author in collections) {
+                let authorBooks = collections[author];
+
+                // Yazar veya kitap ismine göre eşleşme kontrolü
+                let matchesSearch = true;
+                if(searchQuery !== "") {
+                    let authorMatch = author.toLowerCase().includes(searchQuery);
+                    let bookMatch = authorBooks.some(b => b.title.toLowerCase().includes(searchQuery));
+                    matchesSearch = authorMatch || bookMatch;
+                }
+
+                if (!matchesSearch) continue;
+
+                foundAny = true;
+                let card = document.createElement('div');
+                card.className = 'collection-card';
+                
+                let booksHtml = '';
+                authorBooks.forEach(b => {
+                    let status = (b.readPages >= b.totalPages) ? "✅ Bitti" : "📖 Okunuyor";
+                    booksHtml += `<div class="collection-book-item"><span>${b.title}</span> <span>${status}</span></div>`;
+                });
+
+                card.innerHTML = `
+                    <h3>${author} <span style="font-size:0.7em; color:#999;">(${authorBooks.length} Kitap)</span></h3>
+                    ${booksHtml}
+                `;
+                colList.appendChild(card);
+            }
+
+            if (!foundAny) {
+                colList.innerHTML = '<p style="color: #999;">Aradığınız kritere uygun yazar veya koleksiyon bulunamadı.</p>';
+            }
+        }
+
+        // --- İSTATİSTİKLER ---
+        function openStatsModal() {
+            document.getElementById('stats-modal').style.display = 'flex';
+            let books = JSON.parse(localStorage.getItem('savedBooks')) || [];
+            
+            let totalBooks = books.length;
+            let completedBooks = 0, totalPages = 0, totalReadPages = 0;
+            let bookTitles = [], bookReadPages = [];
+
+            books.forEach(b => {
+                totalPages += b.totalPages;
+                totalReadPages += b.readPages;
+                if (b.readPages >= b.totalPages) completedBooks++;
+                
+                let shortTitle = b.title.length > 15 ? b.title.substring(0, 15) + "..." : b.title;
+                bookTitles.push(shortTitle);
+                bookReadPages.push(b.readPages);
+            });
+
+            let readingBooks = totalBooks - completedBooks;
+            document.getElementById('stat-total-books').innerText = totalBooks;
+            document.getElementById('stat-completed-books').innerText = completedBooks;
+            document.getElementById('stat-total-pages').innerText = totalPages;
+            document.getElementById('stat-read-pages').innerText = totalReadPages;
+
+            const ctxPie = document.getElementById('pieChart').getContext('2d');
+            if (pieChartInstance) pieChartInstance.destroy(); 
+            pieChartInstance = new Chart(ctxPie, {
+                type: 'pie',
+                data: {
+                    labels: ['Bitenler', 'Okunanlar'],
+                    datasets: [{ data: [completedBooks, readingBooks], backgroundColor: ['#2ecc71', '#f1c40f'] }]
+                }
+            });
+
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            if (barChartInstance) barChartInstance.destroy(); 
+            barChartInstance = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: bookTitles,
+                    datasets: [{ label: 'Okunan Sayfa', data: bookReadPages, backgroundColor: '#3498db', borderRadius: 4 }]
+                }
             });
         }
     </script>
